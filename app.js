@@ -3,6 +3,8 @@ var count = 0;
 var row = 0;
 var col = 0;
 
+var intervals = [];
+
 function setClick(id) {
   const index = selectedList.indexOf(id);
   var td = document.getElementById(id);
@@ -11,15 +13,34 @@ function setClick(id) {
     td.style.background = "red";
     selectedList.push(id);
     count++;
+
+    var time = 0;
+    var intervalId = setInterval(() => {
+      time++;
+      if (time > 5) {
+        clearInterval(intervalId);
+        td.style.background = "yellow";
+        selectedList.splice(index, 1);
+        intervals.splice(index, 1);
+        count--;
+        document.getElementById("selectCount").innerText = count;
+        td.innerText = id;
+      } else {
+        td.innerText = time;
+      }
+    }, 1000);
+    intervals.push(intervalId);
   } else {
-    td.style.background = "white";
-    selectedList.splice(index, 1);
-    count--;
+    clearInterval(intervals[index]);
+    td.style.background = "green";
+    td.innerText = id;
+    td.onclick = null;
   }
+
   document.getElementById("selectCount").innerText = count;
-  if (count === col * row) {
-    alert("ظرفیت تکمیل شد");
-  }
+  // if (count === col * row) {
+  //   alert("ظرفیت تکمیل شد");
+  // }
 }
 
 function createHall() {
